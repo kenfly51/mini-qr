@@ -543,51 +543,6 @@ async function generateBatchQRCodes(format: 'png' | 'svg') {
 <template>
   <main>
     <div class="relative grid place-items-center bg-white p-8 md:px-6 dark:bg-zinc-900">
-      <div
-        class="mb-8 flex w-full flex-row flex-wrap justify-between gap-4 md:mb-4 md:w-5/6 md:ps-4"
-      >
-        <div class="flex items-center gap-2">
-          <h1 class="text-3xl text-gray-700 dark:text-gray-100">MiniQR</h1>
-        </div>
-        <div class="flex flex-row items-center justify-end gap-4">
-          <div class="flex flex-row items-center gap-2">
-            <a
-              class="icon-button"
-              href="https://github.com/lyqht/styled-qr-code-generator"
-              target="_blank"
-              :aria-label="t('GitHub repository for this project')"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
-                <path
-                  fill="#abcbca"
-                  d="M12.001 2c-5.525 0-10 4.475-10 10a9.994 9.994 0 0 0 6.837 9.488c.5.087.688-.213.688-.476c0-.237-.013-1.024-.013-1.862c-2.512.463-3.162-.612-3.362-1.175c-.113-.288-.6-1.175-1.025-1.413c-.35-.187-.85-.65-.013-.662c.788-.013 1.35.725 1.538 1.025c.9 1.512 2.337 1.087 2.912.825c.088-.65.35-1.087.638-1.337c-2.225-.25-4.55-1.113-4.55-4.938c0-1.088.387-1.987 1.025-2.688c-.1-.25-.45-1.275.1-2.65c0 0 .837-.262 2.75 1.026a9.28 9.28 0 0 1 2.5-.338c.85 0 1.7.112 2.5.337c1.913-1.3 2.75-1.024 2.75-1.024c.55 1.375.2 2.4.1 2.65c.637.7 1.025 1.587 1.025 2.687c0 3.838-2.337 4.688-4.563 4.938c.363.312.676.912.676 1.85c0 1.337-.013 2.412-.013 2.75c0 .262.188.574.688.474A10.016 10.016 0 0 0 22 12c0-5.525-4.475-10-10-10Z"
-                />
-              </svg>
-            </a>
-            <div class="vertical-border"></div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24">
-              <g
-                fill="none"
-                stroke="#abcbca"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-              >
-                <path d="M4 5h7M7 4c0 4.846 0 7 .5 8" />
-                <path
-                  d="M10 8.5c0 2.286-2 4.5-3.5 4.5S4 11.865 4 11c0-2 1-3 3-3s5 .57 5 2.857c0 1.524-.667 2.571-2 3.143m2 6l4-9l4 9m-.9-2h-6.2"
-                />
-              </g>
-            </svg>
-            <Combobox
-              :items="locales"
-              v-model:value="locale"
-              v-model:open="isLocaleSelectOpen"
-              :button-label="t('Select language')"
-            />
-          </div>
-        </div>
-      </div>
       <div class="w-full md:w-5/6">
         <div class="flex flex-col-reverse items-start justify-center gap-4 md:flex-row md:gap-12">
           <div
@@ -767,34 +722,6 @@ async function generateBatchQRCodes(format: 'png' | 'svg') {
             </div>
           </div>
           <div id="settings" class="flex w-full grow flex-col items-start gap-8 text-start">
-            <div>
-              <label>{{ t('Preset') }}</label>
-              <div class="flex flex-row items-center justify-start gap-2">
-                <Combobox
-                  :items="allPresetOptions"
-                  v-model:value="selectedPresetKey"
-                  v-model:open="isPresetSelectOpen"
-                  :button-label="t('Select preset')"
-                />
-                <button
-                  class="icon-button"
-                  @click="randomizeStyleSettings"
-                  :aria-label="t('Randomize style')"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="40"
-                    height="32"
-                    viewBox="0 0 640 512"
-                  >
-                    <path
-                      fill="#888888"
-                      d="M274.9 34.3c-28.1-28.1-73.7-28.1-101.8 0L34.3 173.1c-28.1 28.1-28.1 73.7 0 101.8l138.8 138.8c28.1 28.1 73.7 28.1 101.8 0l138.8-138.8c28.1-28.1 28.1-73.7 0-101.8L274.9 34.3zM200 224a24 24 0 1 1 48 0a24 24 0 1 1-48 0zM96 200a24 24 0 1 1 0 48a24 24 0 1 1 0-48zm128 176a24 24 0 1 1 0-48a24 24 0 1 1 0 48zm128-176a24 24 0 1 1 0 48a24 24 0 1 1 0-48zm-128-80a24 24 0 1 1 0-48a24 24 0 1 1 0 48zm96 328c0 35.3 28.7 64 64 64h192c35.3 0 64-28.7 64-64V256c0-35.3-28.7-64-64-64H461.7c11.6 36 3.1 77-25.4 105.5L320 413.8V448zm160-120a24 24 0 1 1 0 48a24 24 0 1 1 0-48z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
             <div class="w-full">
               <div class="mb-2 flex items-center gap-4">
                 <label for="data">

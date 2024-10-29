@@ -11,7 +11,8 @@
     "lint": "eslint --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore --ignore-pattern \"*.json\"",
     "format": "prettier --write",
     "postinstall": "husky install",
-    "pub": "surge --domain nasty-breath.surge.sh"
+    "cors": "cd dist && echo '*' > CORS",
+    "pub": "npm run build && npm run cors && surge dist --domain nasty-breath.surge.sh"
   },
   "lint-staged": {
     "*.{vue,js,jsx,ts,tsx,json}": [
