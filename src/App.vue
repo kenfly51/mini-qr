@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import StyledQRCode from '@/components/StyledQRCode.vue'
-import { Combobox } from '@/components/ui/Combobox'
 import {
   copyImageToClipboard,
   downloadPngElement,
@@ -10,33 +9,16 @@ import {
   IS_COPY_IMAGE_TO_CLIPBOARD_SUPPORTED
 } from '@/utils/convertToImage'
 import JSZip from 'jszip'
-import {
-  type CornerDotType,
-  type CornerSquareType,
-  type DotType,
-  type ErrorCorrectionLevel,
-  type Options as StyledQRCodeProps
-} from 'qr-code-styling'
+import { type ErrorCorrectionLevel, type Options as StyledQRCodeProps } from 'qr-code-styling'
 import { computed, onMounted, ref, watch } from 'vue'
 import 'vue-i18n'
 import { useI18n } from 'vue-i18n'
-import { createRandomColor, getRandomItemInArray } from './utils/color'
 import { getNumericCSSValue } from './utils/formatting'
-import { sortedLocales } from './utils/language'
-import { allPresets, type Preset } from './utils/presets'
-
+import { allPresets } from './utils/presets'
 //#region /** locale */
-const isLocaleSelectOpen = ref(false)
-const { t, locale } = useI18n()
-const locales = computed(() =>
-  sortedLocales.map((loc) => ({
-    value: loc,
-    label: t(loc)
-  }))
-)
+const { t } = useI18n()
 
 //#endregion
-
 //#region /** styling states and computed properties */
 const defaultPreset = allPresets[0]
 const data = ref()
@@ -45,6 +27,7 @@ const width = ref()
 const height = ref()
 const margin = ref()
 const imageMargin = ref()
+const qrCodeContainer = ref()
 
 const dotsOptionsColor = ref()
 const dotsOptionsType = ref()
@@ -109,37 +92,6 @@ const qrCodeProps = computed<StyledQRCodeProps>(() => ({
   qrOptions: qrOptions.value
 }))
 
-function randomizeStyleSettings() {
-  const dotTypes: DotType[] = [
-    'dots',
-    'rounded',
-    'classy',
-    'classy-rounded',
-    'square',
-    'extra-rounded'
-  ]
-  const cornerSquareTypes: CornerSquareType[] = ['dot', 'square', 'extra-rounded']
-  const cornerDotTypes: CornerDotType[] = ['dot', 'square']
-
-  dotsOptionsType.value = getRandomItemInArray(dotTypes)
-  dotsOptionsColor.value = createRandomColor()
-
-  cornersSquareOptionsType.value = getRandomItemInArray(cornerSquareTypes)
-  cornersSquareOptionsColor.value = createRandomColor()
-
-  cornersDotOptionsType.value = getRandomItemInArray(cornerDotTypes)
-  cornersDotOptionsColor.value = createRandomColor()
-
-  styleBackground.value = createRandomColor()
-}
-
-const isPresetSelectOpen = ref(false)
-const allPresetOptions = computed(() => {
-  const options = lastCustomLoadedPreset.value
-    ? [lastCustomLoadedPreset.value, ...allPresets]
-    : allPresets
-  return options.map((preset) => ({ value: preset.name, label: t(preset.name) }))
-})
 const selectedPreset = ref<Preset & { key?: string }>(defaultPreset)
 watch(selectedPreset, () => {
   data.value = selectedPreset.value.data
@@ -161,7 +113,6 @@ watch(selectedPreset, () => {
     ? selectedPreset.value.qrOptions.errorCorrectionLevel
     : 'Q'
 })
-
 const LAST_LOADED_LOCALLY_PRESET_KEY = 'Last saved locally'
 const LOADED_FROM_FILE_PRESET_KEY = 'Loaded from file'
 const CUSTOM_LOADED_PRESET_KEYS = [LAST_LOADED_LOCALLY_PRESET_KEY, LOADED_FROM_FILE_PRESET_KEY]
@@ -217,18 +168,18 @@ const options = computed(() => ({
 
 async function copyQRToClipboard() {
   console.debug('Copying image to clipboard')
-  const qrCode = document.querySelector('#qr-code-container')
-  if (qrCode) {
-    await copyImageToClipboard(qrCode as HTMLElement, options.value)
+  // const qrCode = document.querySelector('#qr-code-container')
+  if (qrCodeContainer?.value) {
+    await copyImageToClipboard(qrCodeContainer?.value as HTMLElement, options.value)
   }
 }
 
 function downloadQRImageAsPng() {
   if (exportMode.value === ExportMode.Single) {
-    const qrCode = document.querySelector('#qr-code-container')
-    if (qrCode) {
+    // const qrCode = document.querySelector('#qr-code-container')
+    if (qrCodeContainer?.value) {
       downloadPngElement(
-        qrCode as HTMLElement,
+        qrCodeContainer?.value as HTMLElement,
         'qr-code.png',
         options.value,
         styledBorderRadiusFormatted.value
@@ -241,10 +192,10 @@ function downloadQRImageAsPng() {
 
 function downloadQRImageAsSvg() {
   if (exportMode.value === ExportMode.Single) {
-    const qrCode = document.querySelector('#qr-code-container')
-    if (qrCode) {
+    // const qrCode = document.querySelector('#qr-code-container')
+    if (qrCodeContainer?.value) {
       downloadSvgElement(
-        qrCode as HTMLElement,
+        qrCodeContainer?.value as HTMLElement,
         'qr-code.svg',
         options.value,
         styledBorderRadiusFormatted.value
@@ -491,7 +442,7 @@ const createZipFile = (
 }
 async function generateBatchQRCodes(format: 'png' | 'svg') {
   isExportingBatchQRs.value = true
-  const qrCode = document.querySelector('#qr-code-container')
+  const qrCode = qrCodeContainer?.value;
   const zip = new JSZip()
   let numQrCodesCreated = 0
 
@@ -549,7 +500,7 @@ async function generateBatchQRCodes(format: 'png' | 'svg') {
             id="main-content"
             class="sticky top-0 flex w-full shrink-0 flex-col items-center justify-center p-4 md:w-fit"
           >
-            <div id="qr-code-container">
+            <div id="qr-code-container" ref="qrCodeContainer">
               <div
                 class="grid place-items-center overflow-hidden"
                 :style="[
