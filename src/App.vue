@@ -672,7 +672,7 @@ async function generateBatchQRCodes(format: 'png' | 'svg') {
               </div>
             </div>
             <div class="mt-16 flex-1 dark:text-zinc-100">
-              <a href="https://github.com/lyqht/mini-qr">Github</a>
+              Forked from <a href="https://github.com/lyqht/mini-qr">Github</a>
             </div>
           </div>
           <div id="settings" class="flex w-full grow flex-col items-start gap-8 text-start">
